@@ -224,24 +224,6 @@ webmcp-implementation/
     └── WEBMCP-ECOSYSTEM.md       # Architecture docs
 ```
 
-![Architecture Diagram](screenshots/architecture-diagram.png)
-*System architecture: How the web page, extension, and Ollama work together*
-
-## 📚 Documentation
-
-### For Readers
-- **[BLOG-1-CONCEPTUAL.md](docs/BLOG-1-CONCEPTUAL.md)** - What is WebMCP? (No code, concepts only)
-- **[BLOG-2-TECHNICAL.md](docs/BLOG-2-TECHNICAL.md)** - Building WebMCP tools (Complete code)
-
-### For Developers
-- **[demos/README.md](demos/README.md)** - Todo list demo documentation
-- **[extension-demo/README.md](extension-demo/README.md)** - Extension documentation
-- **[extension-demo/SETUP.md](extension-demo/SETUP.md)** - Detailed setup guide
-
-### For Writers
-- **[docs/BLOG-GUIDE.md](docs/BLOG-GUIDE.md)** - Guide for writing about WebMCP
-- **[docs/WEBMCP-ECOSYSTEM.md](docs/WEBMCP-ECOSYSTEM.md)** - Understanding the ecosystem
-
 ## ✨ What's Built
 
 ### Todo List Website (Frontend)
@@ -285,31 +267,6 @@ Exposes 4 WebMCP tools:
 - **Official Extension** (Model Context Tool Inspector): Requires Gemini API, cloud-based
 - **Our Extension**: Uses local Ollama, privacy-focused, no API keys
 
-## 📖 Learning Path
-
-### Week 1: Understand WebMCP
-1. Read [BLOG-1-CONCEPTUAL.md](docs/BLOG-1-CONCEPTUAL.md)
-2. Try official Chrome demos
-3. Enable WebMCP flag in Chrome
-
-### Week 2: Build Your First Tool
-1. Read [BLOG-2-TECHNICAL.md](docs/BLOG-2-TECHNICAL.md)
-2. Clone this repo and run the demo
-3. Modify the todo list tools
-4. Add a new tool
-
-### Week 3: Build an Agent
-1. Study `extension-demo/content.js`
-2. Understand tool discovery and execution
-3. Try different Ollama models
-4. Customize the side panel UI
-
-### Week 4: Go Further
-1. Add more WebMCP tools
-2. Test with other websites
-3. Optimize prompts for your LLM
-4. Share your implementation!
-
 ## 🤝 Contributing
 
 This is a learning project! Feel free to:
@@ -333,10 +290,6 @@ MIT License - Feel free to use for learning and building!
 ### Tools
 - [Ollama](https://ollama.ai) - Local LLM runtime
 - [Model Context Tool Inspector](https://chromewebstore.google.com/detail/model-context-tool-inspec/gbpdfapgefenggkahomfgkhfehlcenpd) - Official Chrome extension
-
-### Community
-- File bugs: https://crbug.com/new?component=2021259
-- Questions: Chrome AI Dev Preview Discussion Group
 
 ---
 
