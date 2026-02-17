@@ -34,7 +34,7 @@ This project provides practical, real-world examples of **BOTH SIDES** of WebMCP
 ### Step 2: Clone & Navigate to Project
 ```bash
 # Clone this repository (if not already done)
-git clone <your-repo-url>
+git clone https://github.com/jageenshukla/webmcp-ollama-chrome-demo
 cd webmcp-implementation
 ```
 
