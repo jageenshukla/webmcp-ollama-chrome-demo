@@ -1,0 +1,593 @@
+/* ============================================
+   Demo 1: Todo List - WebMCP Implementation
+   Styles
+   ============================================ */
+
+/* ============================================
+   1. CSS RESET & BASE STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colors */
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Grays */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: var(--space-xl) var(--space-md);
+}
+
+/* ============================================
+   2. CONTAINER & LAYOUT
+   ============================================ */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* ============================================
+   3. HEADER
+   ============================================ */
+
+header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* ============================================
+   4. STATUS CARD
+   ============================================ */
+
+.status-card {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--gray-200);
+}
+
+.status-card h3 {
+  margin-bottom: var(--space-md);
+  color: var(--gray-700);
+}
+
+.status-card.status-active {
+  background: #ecfdf5;
+  border-color: var(--success);
+}
+
+.status-card.status-inactive {
+  background: #fef2f2;
+  border-color: var(--error);
+}
+
+.status-success {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.status-error {
+  color: var(--error);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.status-detail {
+  margin-top: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+#status-content ul {
+  margin-left: var(--space-lg);
+  margin-top: var(--space-sm);
+}
+
+#status-content li {
+  margin-bottom: var(--space-xs);
+}
+
+/* ============================================
+   5. TOOLS CARD
+   ============================================ */
+
+.tools-card {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--gray-200);
+}
+
+.tools-card h3 {
+  margin-bottom: var(--space-md);
+  color: var(--gray-700);
+}
+
+.tool-card {
+  background: white;
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--primary);
+}
+
+.tool-card:last-child {
+  margin-bottom: 0;
+}
+
+.tool-name {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: var(--space-xs);
+}
+
+.tool-description {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-xs);
+}
+
+.tool-params {
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   6. MANUAL INTERFACE
+   ============================================ */
+
+.manual-interface {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.manual-interface h3 {
+  margin-bottom: var(--space-md);
+  color: var(--gray-700);
+}
+
+.add-todo-form {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+#manual-todo-input {
+  flex: 1;
+  padding: var(--space-md);
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+#manual-todo-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+#manual-add-btn {
+  padding: var(--space-md) var(--space-xl);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#manual-add-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ============================================
+   7. TODOS CONTAINER
+   ============================================ */
+
+.todos-container {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: white;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--gray-200);
+}
+
+.todos-container h3 {
+  margin-bottom: var(--space-md);
+  color: var(--gray-700);
+}
+
+#todos-list {
+  min-height: 100px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  transition: all 0.2s;
+}
+
+.todo-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.todo-item.completed {
+  background: #f0fdf4;
+  border-color: var(--success);
+}
+
+.todo-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: var(--space-md);
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--gray-500);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: var(--space-xs);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   8. ACTIVITY LOG
+   ============================================ */
+
+.activity-log {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--gray-900);
+  color: var(--gray-100);
+  border-radius: var(--radius-md);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-log h3 {
+  margin-bottom: var(--space-md);
+  color: white;
+}
+
+.log-entry {
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-xs);
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.log-entry .timestamp {
+  color: var(--gray-400);
+  white-space: nowrap;
+}
+
+.log-entry .message {
+  flex: 1;
+}
+
+.log-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 3px solid var(--success);
+}
+
+.log-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--error);
+}
+
+.log-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid var(--warning);
+}
+
+.log-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid var(--info);
+}
+
+/* ============================================
+   9. INSTRUCTIONS
+   ============================================ */
+
+.instructions {
+  margin: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.instructions h3 {
+  margin-bottom: var(--space-lg);
+  color: var(--gray-700);
+}
+
+.instruction-section {
+  margin-bottom: var(--space-lg);
+}
+
+.instruction-section:last-child {
+  margin-bottom: 0;
+}
+
+.instruction-section h4 {
+  margin-bottom: var(--space-sm);
+  color: var(--primary);
+}
+
+.instruction-section h5 {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-sm);
+  font-size: 1rem;
+  color: var(--gray-700);
+  font-weight: 600;
+}
+
+.instructions ul,
+.instructions ol {
+  margin-left: var(--space-xl);
+  margin-top: var(--space-sm);
+}
+
+.instructions li {
+  margin-bottom: var(--space-sm);
+}
+
+.instructions code {
+  background: var(--gray-200);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+details {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: white;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+}
+
+summary:hover {
+  color: var(--primary-dark);
+}
+
+details pre {
+  margin-top: var(--space-md);
+  background: var(--gray-900);
+  color: var(--gray-100);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+details code {
+  background: transparent;
+  color: inherit;
+}
+
+.note {
+  margin-top: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+/* ============================================
+   10. FOOTER
+   ============================================ */
+
+footer {
+  background: var(--gray-800);
+  color: var(--gray-300);
+  padding: var(--space-lg);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+footer p {
+  margin-bottom: var(--space-xs);
+}
+
+footer code {
+  background: var(--gray-700);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+  color: var(--gray-100);
+}
+
+/* ============================================
+   11. UTILITY CLASSES
+   ============================================ */
+
+.empty-state {
+  text-align: center;
+  color: var(--gray-400);
+  padding: var(--space-xl);
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  color: var(--gray-400);
+  padding: var(--space-md);
+}
+
+/* ============================================
+   12. RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  body {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .add-todo-form {
+    flex-direction: column;
+  }
+
+  #manual-add-btn {
+    width: 100%;
+  }
+
+  .status-card,
+  .tools-card,
+  .manual-interface,
+  .todos-container,
+  .activity-log,
+  .instructions {
+    margin: var(--space-md);
+    padding: var(--space-md);
+  }
+}
+
+/* ============================================
+   13. ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.log-entry {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ============================================
+   14. SCROLLBAR STYLING
+   ============================================ */
+
+.activity-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.activity-log::-webkit-scrollbar-track {
+  background: var(--gray-800);
+}
+
+.activity-log::-webkit-scrollbar-thumb {
+  background: var(--gray-600);
+  border-radius: 4px;
+}
+
+.activity-log::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}

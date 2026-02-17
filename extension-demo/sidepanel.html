@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebMCP AI Agent</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .header {
+      background: rgba(0,0,0,0.2);
+      color: white;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h2 {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .status.connected {
+      background: #4CAF50;
+    }
+
+    .status.disconnected {
+      background: #f44336;
+    }
+
+    .tab-info {
+      font-size: 12px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .tab-url {
+      opacity: 0.8;
+      margin-top: 4px;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tools-info {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 12px;
+      display: none;
+    }
+
+    .tools-info.visible {
+      display: block;
+    }
+
+    .tools-header {
+      padding: 8px 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .tools-header:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .tools-count {
+      font-weight: 600;
+      color: #4CAF50;
+    }
+
+    .tools-toggle {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .tools-list {
+      font-size: 11px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 15px 0 15px;
+    }
+
+    .tools-list.expanded {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 0 15px 10px 15px;
+    }
+
+    .tool-item {
+      padding: 4px 0;
+      opacity: 0.9;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+      word-wrap: break-word;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: white;
+      color: #333;
+    }
+
+    .message.agent {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.95);
+      color: #333;
+    }
+
+    .message.system {
+      align-self: center;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .message.tool {
+      align-self: flex-start;
+      background: #FFF3CD;
+      color: #856404;
+      border-left: 3px solid #FFC107;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .input-container {
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      gap: 10px;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #send-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: white;
+      color: #667eea;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #send-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    #send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .thinking {
+      display: none;
+      align-self: flex-start;
+      padding: 10px;
+      color: white;
+      font-size: 12px;
+    }
+
+    .thinking.active {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 12px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    .error-state {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid rgba(244, 67, 54, 0.5);
+      padding: 15px;
+      margin: 15px;
+      border-radius: 8px;
+      color: white;
+    }
+
+    .error-state h4 {
+      margin-bottom: 8px;
+    }
+
+    .refresh-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: white;
+      color: #667eea;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <h2>
+        <span>🤖</span>
+        <span>AI Agent</span>
+      </h2>
+      <div id="ollama-status" class="status disconnected">Checking...</div>
+    </div>
+
+    <div class="tab-info">
+      <div id="tab-title">No active tab</div>
+      <div id="tab-url" class="tab-url"></div>
+    </div>
+  </div>
+
+  <div id="tools-info" class="tools-info">
+    <div class="tools-header" id="tools-header">
+      <div>
+        <span>🔧</span>
+        <span id="tools-count" class="tools-count">0 tools</span>
+      </div>
+      <span class="tools-toggle" id="tools-toggle">▼ Click to expand</span>
+    </div>
+    <div id="tools-list" class="tools-list">
+      <div>No tools discovered yet...</div>
+    </div>
+  </div>
+
+  <div class="chat-container" id="chat-container">
+    <div class="empty-state">
+      <h3>👋 Hello!</h3>
+      <p>I'm powered by local Ollama</p>
+      <p style="margin-top: 10px; font-size: 11px;">
+        <strong>qwen2.5:7b</strong> - Tool calling & conversation
+      </p>
+      <p style="margin-top: 15px; font-size: 11px;">
+        Navigate to a page with WebMCP tools to get started!
+      </p>
+    </div>
+  </div>
+
+  <div class="thinking" id="thinking">
+    <div class="spinner"></div>
+    <span id="thinking-text">Thinking...</span>
+  </div>
+
+  <div class="input-container">
+    <input
+      type="text"
+      id="user-input"
+      placeholder="Ask me anything..."
+      autocomplete="off"
+    />
+    <button id="send-btn">Send</button>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

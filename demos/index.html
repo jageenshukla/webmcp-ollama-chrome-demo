@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 1: Todo List - WebMCP Implementation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>📝 Todo List</h1>
+      <p class="subtitle">WebMCP Demo 1: Imperative API Basics</p>
+    </header>
+
+    <!-- WebMCP Status Indicator -->
+    <div id="webmcp-status" class="status-card">
+      <h3>WebMCP Status</h3>
+      <div id="status-content">
+        <p>Checking WebMCP availability...</p>
+      </div>
+    </div>
+
+    <!-- Manual Todo Interface (for humans) -->
+    <div class="manual-interface">
+      <h3>Manual Interface</h3>
+      <div class="add-todo-form">
+        <input
+          type="text"
+          id="manual-todo-input"
+          placeholder="Enter a new todo..."
+          autocomplete="off"
+        >
+        <button id="manual-add-btn" onclick="manualAddTodo()">Add Todo</button>
+      </div>
+    </div>
+
+    <!-- Todo List Display -->
+    <div class="todos-container">
+      <h3>📋 Your Todos</h3>
+      <div id="todos-list">
+        <p class="empty-state">No todos yet. Add one above or use an AI agent!</p>
+      </div>
+    </div>
+
+    <!-- Registered Tools Display -->
+    <div class="tools-card">
+      <h3>🔧 Registered Tools</h3>
+      <div id="tools-list">
+        <p class="loading">Tools will appear here after registration...</p>
+      </div>
+    </div>
+
+    <!-- AI Agent Activity Log -->
+    <div class="activity-log">
+      <h3>🤖 AI Agent Activity Log</h3>
+      <div id="activity-content">
+        <p class="empty-state">Agent activities will appear here...</p>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>📖 How to Use</h3>
+
+      <div class="instruction-section">
+        <h4>For Humans:</h4>
+        <ul>
+          <li>Use the manual interface above to add todos</li>
+          <li>Click checkboxes to mark todos as complete</li>
+          <li>Click 🗑️ to delete todos</li>
+        </ul>
+      </div>
+
+      <div class="instruction-section">
+        <h4>For AI Agents (via Custom Local Extension):</h4>
+
+        <h5>📦 Step 1: Setup Extension</h5>
+        <ol>
+          <li>Open <strong>Chrome Canary</strong> (version 146+)</li>
+          <li>Navigate to <code>chrome://extensions/</code></li>
+          <li>Enable <strong>Developer mode</strong> (toggle in top-right corner)</li>
+          <li>Click <strong>"Load unpacked"</strong></li>
+          <li>Select the <code>extension-demo</code> folder from this project</li>
+          <li>The extension icon should appear in your toolbar</li>
+        </ol>
+
+        <h5>🚀 Step 2: Setup Ollama (Local LLM)</h5>
+        <ol>
+          <li>Install <a href="https://ollama.ai" target="_blank">Ollama</a> if not already installed</li>
+          <li>Pull the model: <code>ollama pull qwen2.5:7b</code></li>
+          <li>Start Ollama with CORS enabled:
+            <pre><code>OLLAMA_ORIGINS="chrome-extension://*,http://localhost:*" ollama serve</code></pre>
+          </li>
+          <li>Verify it's running at <code>http://localhost:11434</code></li>
+        </ol>
+
+        <h5>🧪 Step 3: Test the Extension</h5>
+        <ol>
+          <li>Navigate to this page (<code>http://localhost:8080</code>)</li>
+          <li>Click the extension icon in the toolbar</li>
+          <li>The AI Agent side panel will open</li>
+          <li>You should see: <strong>🔧 4 tools</strong> (click to expand and see):
+            <ul>
+              <li><code>add_todo</code> - Add a new todo item</li>
+              <li><code>mark_complete</code> - Mark a todo as complete</li>
+              <li><code>delete_todo</code> - Delete a todo item</li>
+              <li><code>list_todos</code> - Get all current todos</li>
+            </ul>
+          </li>
+          <li>Try natural language commands like "add buy milk to my todo list"</li>
+          <li>Watch the AI agent execute tools and update the list automatically!</li>
+        </ol>
+
+        <p class="note"><strong>Note:</strong> This extension uses local Ollama (qwen2.5:7b) for both tool calling and conversation. All processing happens locally on your machine for privacy.</p>
+      </div>
+
+      <div class="instruction-section">
+        <h4>Example Natural Language Prompts:</h4>
+        <ul>
+          <li>"Add a todo to buy groceries"</li>
+          <li>"Add three todos: finish report, call dentist, and water plants"</li>
+          <li>"Mark the first todo as complete"</li>
+          <li>"Delete the completed todos"</li>
+          <li>"Show me all my todos"</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Demo 1: Todo List - WebMCP Imperative API</p>
+      <p>Chrome 146+ required with <code>chrome://flags/#enable-webmcp-testing</code> enabled</p>
+    </footer>
+  </div>
+
+  <!-- Load JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
