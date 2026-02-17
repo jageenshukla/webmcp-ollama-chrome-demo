@@ -18,13 +18,11 @@ Before starting, verify you have:
 ollama list
 
 # You should see:
-# functiongemma:latest
 # qwen2.5:7b
 ```
 
-**If models are missing:**
+**If model is missing:**
 ```bash
-ollama pull functiongemma:latest
 ollama pull qwen2.5:7b
 ```
 
@@ -185,7 +183,7 @@ You: Add a todo to call mom
 **Expected Flow:**
 1. Agent thinks
 2. Detects tool calling needed
-3. Uses functiongemma to decide
+3. Uses qwen2.5:7b to decide
 4. Shows: `🔧 Calling add_todo({"text":"call mom"})`
 5. Todo appears on page
 6. Agent confirms: "✅ Successfully added..."
@@ -198,7 +196,7 @@ You: Show me my todos
 ```
 
 **Expected:**
-1. Agent uses functiongemma
+1. Agent uses qwen2.5:7b
 2. Calls `list_todos({})`
 3. Returns formatted list with all todos
 
@@ -210,7 +208,7 @@ You: Add three todos: buy milk, finish report, water plants
 ```
 
 **Expected:**
-1. functiongemma identifies need for 3 tool calls
+1. qwen2.5:7b identifies need for 3 tool calls
 2. Shows 3 separate tool executions
 3. All 3 todos appear on page
 4. Agent summarizes
@@ -235,7 +233,7 @@ You: Add "test task", then mark it complete, then delete it
 ```
 
 **Expected:**
-1. functiongemma plans 3 sequential tool calls
+1. qwen2.5:7b plans 3 sequential tool calls
 2. Executes: add_todo → mark_complete → delete_todo
 3. Task appears, gets checked, disappears
 4. Agent explains what it did
@@ -286,13 +284,13 @@ ollama list
 ### Issue: Tool Calling Not Working
 
 **Check browser console for:**
-- "Functiongemma response:" log
+- "qwen2.5:7b response:" log
 - Parse errors
 - Tool execution errors
 
 **Common causes:**
-1. functiongemma not responding correctly → Check Ollama
-2. JSON parsing failed → functiongemma response format issue
+1. qwen2.5:7b not responding correctly → Check Ollama
+2. JSON parsing failed → qwen2.5:7b response format issue
 3. Tool not found → Tool name mismatch
 
 **Debug:**
@@ -355,14 +353,7 @@ Check these logs:
 ### Test Ollama Directly
 
 ```bash
-# Test functiongemma
-curl http://localhost:11434/api/generate -d '{
-  "model": "functiongemma:latest",
-  "prompt": "What is 2+2?",
-  "stream": false
-}'
-
-# Test qwen2.5
+# Test qwen2.5:7b
 curl http://localhost:11434/api/generate -d '{
   "model": "qwen2.5:7b",
   "prompt": "Hello, how are you?",
@@ -414,8 +405,7 @@ Once everything works:
 ### 3. Improve Prompts
 Edit `iframe-agent.js` to improve:
 - Tool calling detection
-- functiongemma prompts
-- qwen2.5 system prompts
+- qwen2.5:7b prompts and system instructions
 
 ### 4. Extend Functionality
 - Add new tools to todo app
@@ -435,7 +425,7 @@ Detect if needs tools (heuristics + context)
     ↓
     ├─ YES: Tool calling path
     │   ↓
-    │   Call functiongemma with tools
+    │   Call qwen2.5:7b with tools
     │   ↓
     │   Parse tool call decision
     │   ↓
@@ -449,7 +439,7 @@ Detect if needs tools (heuristics + context)
     │
     └─ NO: Conversation path
         ↓
-        Call qwen2.5 with context
+        Call qwen2.5:7b with context
         ↓
         Show response in chat
 ```

@@ -1,4 +1,4 @@
-# Demo 1: Todo List - WebMCP Imperative API
+# Todo List - WebMCP Imperative API
 
 A simple but comprehensive introduction to WebMCP using the Imperative JavaScript API.
 

@@ -6,7 +6,7 @@ A Chrome extension that demonstrates WebMCP with **local Ollama LLMs** - no Goog
 
 This is the **correct implementation** of WebMCP as intended:
 - ✅ Runs in browser context (Chrome extension)
-- ✅ Uses local LLMs (functiongemma + qwen2.5)
+- ✅ Uses local LLM (qwen2.5:7b)
 - ✅ Proper tool discovery via `window.getWebMCPManifest()`
 - ✅ Iframe UI for agent interaction
 - ✅ No external dependencies
@@ -25,9 +25,8 @@ This is the **correct implementation** of WebMCP as intended:
 │                                                          │
 │  Iframe Agent (iframe-agent.js)                         │
 │    ├─ Chat interface                                    │
-│    ├─ Calls Ollama LLMs                                 │
-│    │   ├─ functiongemma → Tool calling                  │
-│    │   └─ qwen2.5 → Conversation                        │
+│    ├─ Calls Ollama LLM (qwen2.5:7b)                     │
+│    │   └─ Handles both tool calling and conversation    │
 │    └─ Sends tool requests to content script             │
 │                                                          │
 └─────────────────────────────────────────────────────────┘
@@ -35,10 +34,8 @@ This is the **correct implementation** of WebMCP as intended:
                   Ollama (Local)
                   Port 11434
                         ↓
-            ┌──────────┴──────────┐
-            │                     │
-   functiongemma:latest   qwen2.5:7b
-   (Tool decisions)       (Chat)
+                   qwen2.5:7b
+            (Tool calling + Conversation)
 ```
 
 ## 📋 Requirements
@@ -51,10 +48,9 @@ curl http://localhost:11434/api/tags
 # Should return list of models
 ```
 
-### 2. Required Models
+### 2. Required Model
 ```bash
-# Pull models if not already installed
-ollama pull functiongemma:latest
+# Pull model if not already installed
 ollama pull qwen2.5:7b
 ```
 
@@ -77,7 +73,7 @@ ollama pull qwen2.5:7b
 1. Make sure Ollama is running:
 ```bash
 ollama list
-# Should show functiongemma and qwen2.5
+# Should show qwen2.5:7b
 ```
 
 2. Verify Ollama is accessible:
@@ -95,7 +91,7 @@ curl http://localhost:11434/api/tags
 
 ### Example Interactions
 
-**Tool Calling (functiongemma):**
+**Tool Calling:**
 ```
 You: Add a todo to buy groceries
 
@@ -104,7 +100,7 @@ Agent:
   ✅ Successfully added todo: "buy groceries"
 ```
 
-**Conversation (qwen2.5):**
+**Conversation:**
 ```
 You: What can you help me with?
 
@@ -152,14 +148,14 @@ function discoverWebMCPTools() {
 ### 2. Tool Calling Decision
 
 ```javascript
-// iframe-agent.js uses functiongemma
+// iframe-agent.js uses qwen2.5:7b
 const prompt = `Available tools: ${JSON.stringify(tools)}
 
 User request: "${userMessage}"
 
 Decide which tool to call with what parameters.`;
 
-const decision = await callOllama('functiongemma:latest', prompt);
+const decision = await callOllama('qwen2.5:7b', prompt);
 // → { needs_tool: true, tool_calls: [...] }
 ```
 
@@ -230,13 +226,12 @@ ollama serve
 curl http://localhost:11434/api/tags
 ```
 
-### Models not found
+### Model not found
 ```bash
 # List installed models
 ollama list
 
-# Pull missing models
-ollama pull functiongemma:latest
+# Pull missing model
 ollama pull qwen2.5:7b
 ```
 
@@ -260,14 +255,7 @@ ollama pull qwen2.5:7b
 
 ### Test Ollama Connection
 ```bash
-# Test functiongemma
-curl http://localhost:11434/api/generate -d '{
-  "model": "functiongemma:latest",
-  "prompt": "Hello",
-  "stream": false
-}'
-
-# Test qwen2.5
+# Test qwen2.5:7b
 curl http://localhost:11434/api/generate -d '{
   "model": "qwen2.5:7b",
   "prompt": "Hello",
@@ -326,7 +314,7 @@ extension-demo/
 Try the extension on other websites with WebMCP tools (when available)
 
 ### Improve Tool Calling
-- Better prompts for functiongemma
+- Better prompts for qwen2.5:7b
 - Add function calling examples
 - Handle complex multi-step workflows
 

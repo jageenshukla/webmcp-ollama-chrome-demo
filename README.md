@@ -2,6 +2,9 @@
 
 A complete implementation of **WebMCP** (Web Model Context Protocol) - Chrome's new standard for AI-ready websites.
 
+![WebMCP Demo - AI Agent adding todos via natural language](screenshots/demo-hero.png)
+*Complete end-to-end demo: AI agent interacting with todo list using WebMCP tools*
+
 ## What is This Project?
 
 This project provides practical, real-world examples of **BOTH SIDES** of WebMCP:
@@ -26,10 +29,16 @@ This project provides practical, real-world examples of **BOTH SIDES** of WebMCP
 3. Click dropdown → Select **"Enabled"**
 4. Click **"Relaunch"** button at bottom
 
+![Chrome Flags - Enable WebMCP](screenshots/chrome-flags-webmcp.png)
+*Chrome flags page showing WebMCP for testing flag enabled*
+
 **C. Verify Setup**
 1. Open DevTools (F12 or Right-click → Inspect)
 2. In Console, type: `navigator.modelContext`
 3. You should see: `{registerTool: ƒ, unregisterTool: ƒ, ...}` ✅
+
+![DevTools Console - Verify navigator.modelContext](screenshots/devtools-verify-modelcontext.png)
+*DevTools console showing navigator.modelContext API is available*
 
 ### Step 2: Clone & Navigate to Project
 ```bash
@@ -69,6 +78,9 @@ python3 -m http.server 8080
 - Extension card titled "WebMCP Local AI Agent"
 - Extension icon in toolbar
 - No error messages (red text)
+
+![Chrome Extension Loaded](screenshots/extension-loaded.png)
+*Chrome extensions page showing WebMCP Local AI Agent successfully loaded*
 
 > **Tip:** Pin the extension to toolbar: Click puzzle icon → Click pin next to "WebMCP Local AI Agent"
 
@@ -118,12 +130,18 @@ OLLAMA_HOST=0.0.0.0:11434 ollama serve
 1. In Chrome Canary, navigate to: http://localhost:8080
 2. You should see: "📝 Todo List" page
 
+![Todo List Demo Website](screenshots/demo-website.png)
+*Todo list web application with WebMCP tools registered*
+
 **B. Open the AI Agent Side Panel**
 1. Click the **extension icon** in toolbar (or puzzle icon → WebMCP Local AI Agent)
 2. Side panel opens on the right
 3. You should see:
    - 🔧 Tools indicator showing "4 tools"
    - Chat interface at bottom
+
+![Extension Side Panel with Tools Discovered](screenshots/sidepanel-tools-discovered.png)
+*Extension side panel showing 4 WebMCP tools discovered on the page*
 
 **C. Try These Commands!**
 ```
@@ -149,6 +167,9 @@ Agent: ✅ Deleted!
 - Executes multiple tools in sequence
 - Updates the webpage in real-time
 - All running locally (no cloud APIs!)
+
+![Demo in Action - AI Adding Todos](screenshots/demo-in-action.png)
+*AI agent executing tools in real-time: adding and managing todos via natural language*
 
 ---
 
@@ -202,6 +223,9 @@ webmcp-implementation/
     ├── BLOG-GUIDE.md             # Blog writing guide
     └── WEBMCP-ECOSYSTEM.md       # Architecture docs
 ```
+
+![Architecture Diagram](screenshots/architecture-diagram.png)
+*System architecture: How the web page, extension, and Ollama work together*
 
 ## 📚 Documentation
 
